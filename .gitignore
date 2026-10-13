@@ -1,0 +1,17 @@
+cd E:\Project
+@"
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+dist/
+build/
+*.log
+Thumbs.db
+*.zip
+.vscode/
+"@ | Out-File -Encoding ascii .gitignore

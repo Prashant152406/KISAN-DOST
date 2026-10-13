@@ -1,0 +1,51 @@
+# All pins below are RANGES, not exact versions — see README.md
+# "Troubleshooting" for why. In short: pip needs a prebuilt wheel for
+# your exact Python version, and very new or very old Python releases
+# sometimes don't have one yet for every package here.
+#
+# *** CRITICAL — READ IF YOU WANT DISEASE DETECTION TO WORK ***
+# TensorFlow (needed for /api/disease/*) does NOT support Python 3.14
+# as of writing — there is no wheel for it at any version, this is
+# not a pinning problem. If you're on Python 3.14, disease detection
+# CANNOT be installed until TensorFlow ships 3.14 support. Use Python
+# 3.10, 3.11 or 3.12 for this project instead (3.12 recommended) — see
+# README.md "Python version" section. The crop-recommendation half of
+# this service (predict/weather/soil-report/crop-info) has no such
+# restriction and works fine on 3.14 if you only need that part.
+
+# Web framework — plain uvicorn (no [standard] extra) deliberately:
+# the extra pulls in httptools/uvloop/websockets, more compiled
+# packages that are exactly the kind that lag on brand-new Python
+# releases. Plain uvicorn's dev auto-reload still works fine, just
+# via polling instead of a file-watcher.
+fastapi>=0.115,<1.0
+uvicorn>=0.34,<1.0
+python-multipart>=0.0.20,<1.0
+
+# Config — pydantic must be >=2.12: earlier 2.x releases pin a
+# pydantic-core version with no Python 3.14 wheel at all.
+pydantic>=2.12,<3.0
+pydantic-settings>=2.7,<3.0
+python-dotenv>=1.0,<2.0
+
+# Crop recommendation — ExtraTreesClassifier (Oct 2026 model swap),
+# loaded via joblib rather than pickle. scikit-learn needs >=1.7.2 for
+# Python 3.14 wheels specifically; any 1.6.x/1.7.x/1.8.x loads and
+# predicts with this model fine.
+scikit-learn>=1.6,<2.0
+joblib>=1.3,<2.0
+pandas>=2.2,<3.0
+numpy>=1.26,<3.0
+
+# Disease detection — EfficientNetB0 Keras model, 224x224 RGB input.
+# REQUIRES PYTHON 3.10-3.12 — see the critical note above.
+tensorflow>=2.16,<2.21
+pillow>=10.0,<12.0
+
+# Google Gemini — soil report reading, crop growing guides, and
+# disease treatment plans. This is the current `google-genai` SDK,
+# not the deprecated `google-generativeai` package.
+google-genai>=1.3,<2.0
+
+# For the weather lookup (Open-Meteo — free, no API key)
+httpx>=0.28,<1.0

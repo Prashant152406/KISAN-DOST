@@ -1,0 +1,5 @@
+{
+  "model": "ExtraTrees",
+  "test_accuracy": 0.990909090909091,
+  "validation_accuracy": 0.996969696969697
+}
